@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ej02 - Calculadora simple</title>
+  <style>
+    body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:Verdana,Segoe UI;background:#eef2f7}
+    .calc{background:#fff;padding:1rem;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06);width:260px}
+    input.display{width:100%;font-size:1.2rem;padding:.6rem;margin-bottom:.6rem;text-align:right}
+    .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+    button{padding:.6rem;font-size:1rem;border-radius:6px;border:0;cursor:pointer}
+    button.op{background:#fbbf24}
+    button.equal{grid-column:span 2;background:#38b2ac;color:#fff}
+  </style>
+</head>
+<body>
+  <div class="calc">
+    <input id="display" class="display" type="text" readonly value="0">
+    <div class="keys">
+      <button data-val="7">7</button><button data-val="8">8</button><button data-val="9">9</button><button class="op" data-val="/">/</button>
+      <button data-val="4">4</button><button data-val="5">5</button><button data-val="6">6</button><button class="op" data-val="*">*</button>
+      <button data-val="1">1</button><button data-val="2">2</button><button data-val="3">3</button><button class="op" data-val="-">-</button>
+      <button data-val="0">0</button><button data-val=".">.</button><button class="equal" id="eq">=</button><button class="op" data-val="+">+</button>
+    </div>
+    <div style="margin-top:.6rem;display:flex;gap:.5rem">
+      <button id="clear" style="flex:1;background:#e53e3e;color:#fff">C</button>
+      <button id="del" style="flex:1;background:#a0aec0;color:#fff">DEL</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let expr = '';
+
+    document.querySelectorAll('button[data-val]').forEach(btn=>{
+      btn.addEventListener('click', ()=> {
+        const v = btn.getAttribute('data-val');
+        // prevent multiple dots in a number segment
+        if(v === '.' && expr.slice(-1) === '.') return;
+        if(expr === '0' && /\d/.test(v)) expr = v;
+        else expr += v;
+        display.value = expr || '0';
+      });
+    });
+
+    document.getElementById('clear').addEventListener('click', ()=> {
+      expr = ''; display.value = '0';
+    });
+
+    document.getElementById('del').addEventListener('click', ()=> {
+      expr = expr.slice(0,-1);
+      display.value = expr || '0';
+    });
+
+    document.getElementById('eq').addEventListener('click', ()=> {
+      try {
+        // Seguridad básica: permitir solo números y operadores
+        if(!/^[0-9+\-*/.() ]+$/.test(expr)) throw new Error('Expresión inválida');
+        const result = Function('"use strict";return ('+expr+')')();
+        display.value = result;
+        expr = String(result);
+      } catch(e) {
+        display.value = 'Error';
+        expr = '';
+      }
+    });
+  </script>
+</body>
+</html>

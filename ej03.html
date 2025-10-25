@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ej03 - Cambio de imagen al hover</title>
+  <style>
+    body{font-family:Arial;margin:0;display:flex;align-items:center;justify-content:center;height:100vh;background:#f7fafc}
+    .frame{background:#fff;padding:1rem;border-radius:8px;box-shadow:0 10px 30px rgba(2,6,23,.06);text-align:center}
+    img{width:320px;height:220px;object-fit:cover;border-radius:6px;transition:transform .4s ease,opacity .4s}
+    img:hover{transform:scale(1.03);opacity:.95}
+    .note{margin-top:.6rem;color:#555}
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <h2>Imagen interactiva</h2>
+    <img id="imagen" src="https://picsum.photos/id/237/320/220" alt="original">
+    <div class="note">Pasa el ratón sobre la imagen para cambiarla</div>
+  </div>
+
+  <script>
+    const img = document.getElementById('imagen');
+    const original = img.src;
+    const hoverSrc = 'https://picsum.photos/id/1005/320/220'; // otra imagen aleatoria
+    img.addEventListener('mouseenter', ()=> img.src = hoverSrc);
+    img.addEventListener('mouseleave', ()=> img.src = original);
+  </script>
+</body>
+</html>

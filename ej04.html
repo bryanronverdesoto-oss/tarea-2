@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ej04 - Reloj analógico con números</title>
+  <style>
+    :root {
+      --bg: #e0f2fe;
+      --clock-bg: #ffffff;
+      --border: #94a3b8;
+      --hand-hour: #1e293b;
+      --hand-minute: #475569;
+      --hand-second: #ef4444;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(120deg, var(--bg), #f0f9ff);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    .clock {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: var(--clock-bg);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border: 6px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .center {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: #1e293b;
+      border-radius: 50%;
+      z-index: 10;
+    }
+    .mark {
+      position: absolute;
+      width: 4px;
+      height: 20px;
+      background: #1e293b;
+      left: 50%;
+      top: 10px;
+      transform-origin: center 140px;
+      border-radius: 2px;
+    }
+    .number {
+      position: absolute;
+      font-weight: bold;
+      color: #1e293b;
+      font-size: 1rem;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: 50% 100%;
+      transform: translate(-50%, -100%) rotate(0deg);
+      border-radius: 6px;
+    }
+    .hour {
+      width: 8px;
+      height: 70px;
+      background: var(--hand-hour);
+      z-index: 6;
+    }
+    .minute {
+      width: 5px;
+      height: 100px;
+      background: var(--hand-minute);
+      z-index: 7;
+    }
+    .second {
+      width: 2px;
+      height: 120px;
+      background: var(--hand-second);
+      z-index: 8;
+    }
+    .label {
+      position: absolute;
+      bottom: -3.5rem;
+      font-weight: 600;
+      color: #334155;
+      text-align: center;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="clock" id="clock">
+      <div class="center"></div>
+      <div id="hour" class="hand hour"></div>
+      <div id="minute" class="hand minute"></div>
+      <div id="second" class="hand second"></div>
+    </div>
+    <div class="label" id="timeLabel"></div>
+  </div>
+
+  <script>
+    const clock = document.getElementById('clock');
+    const hourEl = document.getElementById('hour');
+    const minuteEl = document.getElementById('minute');
+    const secondEl = document.getElementById('second');
+    const timeLabel = document.getElementById('timeLabel');
+
+    // Crear 12 marcas
+    for (let i = 0; i < 12; i++) {
+      const mark = document.createElement('div');
+      mark.className = 'mark';
+      mark.style.transform = `rotate(${i * 30}deg) translate(-50%, 0)`;
+      clock.appendChild(mark);
+    }
+
+    // Crear números del 1 al 12
+    for (let i = 1; i <= 12; i++) {
+      const num = document.createElement('div');
+      num.className = 'number';
+      const angle = (i - 3) * (Math.PI * 2) / 12; // offset para que el 12 quede arriba
+      const radius = 120;
+      const x = 150 + radius * Math.cos(angle);
+      const y = 150 + radius * Math.sin(angle);
+      num.style.left = `${x}px`;
+      num.style.top = `${y}px`;
+      num.textContent = i;
+      clock.appendChild(num);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const sec = now.getSeconds();
+      const min = now.getMinutes();
+      const hr = now.getHours() % 12;
+
+      const secDeg = sec * 6; // 360 / 60
+      const minDeg = min * 6 + sec * 0.1;
+      const hrDeg = hr * 30 + min * 0.5;
+
+      secondEl.style.transform = `translate(-50%, -100%) rotate(${secDeg}deg)`;
+      minuteEl.style.transform = `translate(-50%, -100%) rotate(${minDeg}deg)`;
+      hourEl.style.transform = `translate(-50%, -100%) rotate(${hrDeg}deg)`;
+
+      timeLabel.textContent = now.toLocaleTimeString();
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>

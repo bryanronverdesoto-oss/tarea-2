@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ej07 - Menú desplegable interactivo</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f1f5f9;
+      --text: #1e293b;
+      --white: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+    }
+
+    /* ==== NAVBAR ==== */
+    nav {
+      background: var(--white);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .menu {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .menu-item {
+      position: relative;
+    }
+
+    .menu-item > button {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.3s;
+    }
+
+    .menu-item > button:hover {
+      color: var(--primary);
+    }
+
+    /* Submenús */
+    .submenu {
+      position: absolute;
+      top: 120%;
+      left: 0;
+      background: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      display: none;
+      flex-direction: column;
+      min-width: 180px;
+      overflow: hidden;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .submenu a {
+      padding: 0.7rem 1rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: background 0.3s;
+    }
+
+    .submenu a:hover {
+      background: #eff6ff;
+      color: var(--primary);
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==== MODO RESPONSIVE ==== */
+    .toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .bar {
+      width: 25px;
+      height: 3px;
+      background: var(--text);
+      margin: 4px 0;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    @media (max-width: 700px) {
+      .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        flex-direction: column;
+        display: none;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .menu.open {
+        display: flex;
+      }
+
+      .menu-item {
+        width: 100%;
+        text-align: left;
+      }
+
+      .submenu {
+        position: static;
+        box-shadow: none;
+        animation: none;
+        border-left: 3px solid var(--primary);
+        margin-left: 1rem;
+      }
+
+      .toggle {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar">
+      <div class="logo">🌐 Mi Sitio</div>
+
+      <div class="toggle" id="toggle">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+
+      <div class="menu" id="menu">
+        <div class="menu-item">
+          <button data-target="sub1">Productos ▾</button>
+          <div id="sub1" class="submenu">
+            <a href="#">Computadoras</a>
+            <a href="#">Celulares</a>
+            <a href="#">Accesorios</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button data-target="sub2">Servicios ▾</button>
+          <div id="sub2" class="submenu">
+            <a href="#">Reparación</a>
+            <a href="#">Asesoría Técnica</a>
+            <a href="#">Soporte 24h</a>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <button onclick="alert('Página de contacto próximamente!')">Contacto</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main style="max-width:800px;margin:2rem auto;padding:1rem;text-align:center;">
+    <h1>Ejercicio 7 — Menú Desplegable</h1>
+  </main>
+
+  <script>
+    const menu = document.getElementById("menu");
+    const toggle = document.getElementById("toggle");
+
+    // Toggle menú móvil
+    toggle.addEventListener("click", () => {
+      menu.classList.toggle("open");
+    });
+
+    // Mostrar/ocultar submenús
+    document.querySelectorAll('button[data-target]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const id = btn.getAttribute('data-target');
+        const submenu = document.getElementById(id);
+        const isVisible = submenu.style.display === 'flex';
+
+        // Cierra todos los demás submenús
+        document.querySelectorAll('.submenu').forEach(s => s.style.display = 'none');
+
+        // Muestra el seleccionado
+        submenu.style.display = isVisible ? 'none' : 'flex';
+        e.stopPropagation();
+      });
+    });
+
+    // Cierra los submenús al hacer clic fuera
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.menu-item')) {
+        document.querySelectorAll('.submenu').forEach(s => s.style.display = 'none');
+      }
+    });
+  </script>
+</body>
+</html>

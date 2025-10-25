@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ej09 - Temporizador cuenta regresiva</title>
+  <style>
+    body{font-family:Arial;background:#eef2f7;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+    .card{background:#fff;padding:1.4rem;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.06);width:360px;text-align:center}
+    input{padding:.6rem;border-radius:6px;border:1px solid #cbd5e1;width:100px}
+    .display{font-size:2rem;margin-top:1rem}
+    button{padding:.5rem 1rem;border-radius:6px;border:0;background:#3182ce;color:#fff;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Cuenta regresiva</h2>
+    <div>
+      <label>Minutos: <input id="mins" type="number" value="1" min="0"></label>
+      <label>Segundos: <input id="secs" type="number" value="0" min="0" max="59"></label>
+    </div>
+    <div style="margin-top:.6rem">
+      <button id="start">Iniciar</button>
+      <button id="stop" style="background:#e53e3e">Detener</button>
+    </div>
+    <div class="display" id="display">00:00</div>
+  </div>
+
+  <script>
+    const mins = document.getElementById('mins');
+    const secs = document.getElementById('secs');
+    const display = document.getElementById('display');
+    const startBtn = document.getElementById('start');
+    const stopBtn = document.getElementById('stop');
+    let timer = null;
+    let remaining = 0;
+
+    function format(t){ const m = Math.floor(t/60).toString().padStart(2,'0'); const s = (t%60).toString().padStart(2,'0'); return `${m}:${s}`; }
+
+    startBtn.addEventListener('click', ()=> {
+      remaining = parseInt(mins.value||0)*60 + parseInt(secs.value||0);
+      if(isNaN(remaining) || remaining <= 0) return alert('Ingresa un tiempo mayor a 0');
+      display.textContent = format(remaining);
+      if(timer) clearInterval(timer);
+      timer = setInterval(()=> {
+        remaining--;
+        display.textContent = format(remaining);
+        if(remaining <= 0){ clearInterval(timer); timer = null; alert('¡Tiempo terminado!'); }
+      }, 1000);
+    });
+
+    stopBtn.addEventListener('click', ()=> {
+      if(timer) clearInterval(timer);
+      timer = null;
+    });
+  </script>
+</body>
+</html>

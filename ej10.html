@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ej10 - Juego preguntas y respuestas</title>
+  <style>
+    body{font-family:Arial;background:#f7fafc;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+    .quiz{background:#fff;padding:1.2rem;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.06);width:420px}
+    .options button{display:block;width:100%;text-align:left;padding:.6rem;margin:.4rem 0;border-radius:6px;border:1px solid #cbd5e1;background:#fff;cursor:pointer}
+    .result{font-weight:700;margin-top:.8rem}
+  </style>
+</head>
+<body>
+  <div class="quiz">
+    <h2>Quiz rápido</h2>
+    <div id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="result" id="result"></div>
+    <div style="margin-top:.8rem">
+      <button id="next">Siguiente</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {q:'¿Cuál es la capital de Ecuador?', opts:['Quito','Guayaquil','Cuenca','Loja'], a:0},
+      {q:'¿Cuánto es 7 × 6?', opts:['42','36','48','56'], a:0},
+      {q:'¿En HTML la etiqueta para un enlace es?', opts:['<a>','<link>','<href>','<url>'], a:0},
+      {q:'¿JavaScript es un lenguaje?', opts:['Basado en scripts para web','Solo para servidores','Lenguaje de base de datos','Sistema operativo'], a:0}
+    ];
+    let idx = 0;
+    let score = 0;
+    const qEl = document.getElementById('question');
+    const optsEl = document.getElementById('options');
+    const resEl = document.getElementById('result');
+    const nextBtn = document.getElementById('next');
+
+    function render(){
+      resEl.textContent = '';
+      const cur = questions[idx];
+      qEl.textContent = `${idx+1}. ${cur.q}`;
+      optsEl.innerHTML = '';
+      cur.opts.forEach((o,i)=>{
+        const b = document.createElement('button');
+        b.textContent = o;
+        b.addEventListener('click', ()=> {
+          if(b.disabled) return;
+          if(i === cur.a){ score++; b.style.borderColor = '#38a169'; b.style.background='#f0fff4'; resEl.textContent = 'Correcto!'; }
+          else { b.style.borderColor = '#e53e3e'; b.style.background='#fff5f5'; resEl.textContent = `Incorrecto. Respuesta: ${cur.opts[cur.a]}`; }
+          // deshabilitar todas
+          optsEl.querySelectorAll('button').forEach(bt=> bt.disabled = true);
+        });
+        optsEl.appendChild(b);
+      });
+    }
+
+    nextBtn.addEventListener('click', ()=> {
+      idx++;
+      if(idx >= questions.length){
+        qEl.textContent = 'Juego terminado';
+        optsEl.innerHTML = '';
+        resEl.textContent = `Puntuación: ${score} / ${questions.length}`;
+        nextBtn.disabled = true;
+        return;
+      }
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

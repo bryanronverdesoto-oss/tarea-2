@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ej01 - Cambio de estilo interactivo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(120deg, #dbeafe, #e0f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.5s ease;
+    }
+
+    .card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      width: 340px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .target {
+      height: 120px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+      border: 2px dashed #94a3b8;
+      margin-bottom: 1rem;
+      transition: all 0.5s ease;
+      box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+
+    button {
+      padding: 0.7rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    .message {
+      margin-top: 0.8rem;
+      color: #334155;
+      font-size: 0.95rem;
+      min-height: 1.4rem;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37,99,235, 0.5); }
+      70% { box-shadow: 0 0 0 15px rgba(37,99,235, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37,99,235, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🎨 Cambiar estilo</h2>
+    <div id="box" class="target">Haz clic en el botón</div>
+    <button id="btn">Cambiar estilo</button>
+    <div id="msg" class="message"></div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('btn');
+    const box = document.getElementById('box');
+    const msg = document.getElementById('msg');
+    let active = false;
+
+    // Genera un color aleatorio en formato hexadecimal
+    function randomColor() {
+      return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    }
+
+    btn.addEventListener('click', () => {
+      active = !active;
+
+      if (active) {
+        const color = randomColor();
+        box.style.background = color;
+        box.style.border = '2px solid #1e293b';
+        box.style.transform = 'rotate(5deg)';
+        box.style.color = 'white';
+        box.style.animation = 'pulse 1.5s ease';
+        msg.textContent = `Nuevo color: ${color}`;
+        btn.textContent = 'Restaurar estilo';
+        document.body.style.background = `linear-gradient(135deg, ${color}, #c7d2fe)`;
+      } else {
+        // Restaurar
+        box.style.background = '#f8fafc';
+        box.style.border = '2px dashed #94a3b8';
+        box.style.transform = 'rotate(0deg)';
+        box.style.color = '#1e293b';
+        msg.textContent = 'Estilo original restaurado';
+        btn.textContent = 'Cambiar estilo';
+        document.body.style.background = 'linear-gradient(120deg, #dbeafe, #e0f2fe)';
+      }
+    });
+  </script>
+</body>
+</html>

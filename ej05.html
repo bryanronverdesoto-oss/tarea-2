@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ej05 - Validación de formulario</title>
+  <style>
+    body{font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f7fafc}
+    form{background:#fff;padding:1.4rem;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.06);width:320px}
+    label{display:block;margin-top:.6rem}
+    input{width:100%;padding:.6rem;margin-top:.3rem;border-radius:6px;border:1px solid #cbd5e1}
+    .error{color:#e53e3e;font-size:.9rem;margin-top:.4rem}
+    button{margin-top:.8rem;padding:.6rem 1rem;background:#2b6cb0;color:#fff;border:0;border-radius:6px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <form id="form" novalidate>
+    <h2>Registro</h2>
+    <label>Nombre
+      <input id="name" type="text" placeholder="Tu nombre">
+    </label>
+    <label>Correo
+      <input id="email" type="email" placeholder="ejemplo@dominio.com">
+    </label>
+    <label>Contraseña
+      <input id="pw" type="password" placeholder="mín 6 caracteres">
+    </label>
+    <div id="msg" class="error" aria-live="polite"></div>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const pwInput = document.getElementById('pw');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const pw = pwInput.value;
+      const errors = [];
+
+      if(name.length < 2) errors.push('Nombre debe tener al menos 2 caracteres.');
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Correo inválido.');
+      if(pw.length < 6) errors.push('Contraseña debe tener al menos 6 caracteres.');
+
+      if(errors.length){
+        msg.innerHTML = errors.map(x => `• ${x}`).join('<br>');
+      } else {
+        msg.style.color = 'green';
+        msg.textContent = 'Formulario válido. (Simulación de envío)';
+        // aquí podrías enviar con fetch a un servidor
+        setTimeout(()=> { msg.style.color=''; form.reset(); msg.textContent=''; }, 2000);
+      }
+    });
+  </script>
+</body>
+</html>
